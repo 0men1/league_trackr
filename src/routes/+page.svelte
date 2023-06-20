@@ -1,14 +1,14 @@
-<h1 class="text-3xl font-bold underline">
-    Hello world!
-</h1>
+<svelte:head>
+	<title>League Tracker</title>
+	<meta name="description" content="Use this search bar to search for your user" />
+</svelte:head>
 
 
-<a href="./search_page">Search Bar</a>
 
 
-  <style lang="postcss">
-    :global(html) {
-      background-color: theme(colors.gray.100);
-    }
-  </style>
-  
+<div id="home" class="flex flex-col h-screen w-screen justify-center items-center">
+    <h1 class="px-3 py-3 font-bold">Click here to get started with searching!</h1>
+    <a href="/search_page" class="px-3 py-3 rounded-lg border-2 border-black">Search for a player</a>
+
+    <footer class="underline">Created by me btw</footer>
+</div>
