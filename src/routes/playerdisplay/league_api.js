@@ -1,6 +1,6 @@
 // @ts-nocheck
 import axios from 'axios';
-import {champion_ids, spell_ids} from '/Users/Homen/Desktop/Projects/league_trackr/src/routes/playerdisplay/champspells.js';
+import {champion_ids, spell_ids} from './champspells.js';
 const api_key = "?api_key=RGAPI-af071f08-02bb-42ae-8f2a-1b9f2dfbd706";
 
 //Encodes league name to be used in url
