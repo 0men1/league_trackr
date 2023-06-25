@@ -1,14 +1,14 @@
 export const spell_ids = {
-    21: 'Barrier',
-    1: 'Cleanse',
-    14: 'Ignite',
-    3: 'Exhaust',
-    4: 'Flash',
-    6: 'Ghost',
-    7: 'Heal',
-    13: 'Clarity',
-    11: 'Smite',
-    12: 'Teleport',
+    21: ['Barrier', 180],
+    1: ['Cleanse', 210],
+    14: ['Ignite', 180],
+    3: ['Exhaust', 210],
+    4: ['Flash', 300],
+    6: ['Ghost', 210],
+    7: ['Heal', 240],
+    13: ['Clarity', 240],
+    11: ['Smite', 15],
+    12: ['Teleport', 360],
 }
 
 export const champion_ids = {
