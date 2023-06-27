@@ -12,7 +12,7 @@
 	import { check_account_validity, get_game_info, get_current_game_info, get_champ_image, get_spell_image } from "./league_api";
 	import { onMount, afterUpdate } from 'svelte'
 	import {useState} from './hooks.js'
-	
+
 	let user = '';
 	const [blue_team, setBlueTeam] = useState([]);
 	const [red_team, setRedTeam] = useState([]);
@@ -58,11 +58,57 @@
 				enableCooldown(cooldownElement);
 			});
 		});
+
+		let list = document.getElementsByTagName("ul")[0]
+		  dragndrop(list)
+
 	});
 
 
+	function dragndrop(list) {
+				// Drag and drop
+		Array.from(list.children).forEach((i) => i.draggable = true)
+		let drag_target = null,
+			drop_target = null
+
+		list.addEventListener("dragstart", function handle_drag_start(event) {
+			drag_target = event.target
+			
+			event.dataTransfer.effectAllowed = "move"
+			event.dataTransfer.setData("text/plain", null)
+
+			
+			list.addEventListener("dragend", handle_drag_end)
+			list.addEventListener("dragover", handle_drag_over)
+		})
+
+		function handle_drag_over(event) {
+			event.preventDefault()
+
+			if (event.target && event.target != drag_target && event.target.nodeName == "LI") {
+				let rect = event.target.getBoundingClientRect()
+				if ((event.clientY - rect.top) / (rect.bottom - rect.top) < .5) {
+					list.insertBefore(drag_target, event.target)
+				}
+				else {
+					list.insertBefore(drag_target, event.target.nextSibling || event.target)
+				}
+			}
+		}
+
+		function handle_drag_end(event) {
+			event.preventDefault()
+			event.dataTransfer.dropEffect = "move"
+			
+			drag_target = null
+			
+			list.removeEventListener("dragover", handle_drag_over, false)
+			list.removeEventListener("dragend", handle_drag_end, false)
+		}
+	}
+
 	onMount(() => { 
-		  user = window.location.href.split('?')[1].split('=')[1].split('/')[0] 
+		  user = window.location.href.split('?')[1].split('=')[1].split('/')[0]
 	});
 	
 	const handleSummonerNameSubmit = async (user) => {
@@ -110,78 +156,74 @@
 		
 		<a id="all_users" class="flex text-white border-2 border-black rounded-lg p-4" href="./search_page">Back to search</a>
 
-		<div id='all_users' class='flex w-fit h-fit place-content-center gap-4 rounded-lg'>
+		<div id='all_users' class='lg:scale-100 md:scale-75 sm:scale-50 flex w-fit h-fit place-content-center gap-4 rounded-lg'>
 			
-			<div class='item inline w-fit h-full text-white list'>
+			<ul class='item inline w-fit h-full text-white list'>
 				{#each $blue_team as player, i}
-				<div draggable="true" class='item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
+				<li class=' list-none item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
 					
 					<div class='flex justify-center w-fit h-fit gap-2'>
 						
 						<div class="cooldown relative inline-block flex justify-center">
 							<!-- svelte-ignore a11y-img-redundant-alt -->
-							<img src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-							
+							<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
 							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
 						</div>
 												  
 						<div class="cooldown relative inline-block flex justify-center">
 							<!-- svelte-ignore a11y-img-redundant-alt -->
-							<img src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-							
+							<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
 							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
 						</div>
 
 					</div>
 		
 					<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
-						<img src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
-						<h1 class="truncate2  " >{player.name}</h1>
+						<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
+						<h1 class="sm:text-clip" >{player.name}</h1>
 					</div>
 		
 					<div class='flex gap-2'>
-						<a href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
-						<a href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
+						<a target="_blank" draggable="false" href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
+						<a target="_blank" draggable="false" href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
 					</div>
-				</div>
+				</li>
 				{/each}
-			</div>
+			</ul>
 		
 
-			<div class='inline w-fit text-white'>
+			<ul class='item inline w-fit h-full text-white list'>
 				{#each $red_team as player, i}
-				<div draggable="true" class='item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
+				<li class='item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
 					
 					<div class='flex justify-center w-fit h-fit gap-2'>
 						
 						<div class="cooldown relative inline-block flex justify-center">
 							<!-- svelte-ignore a11y-img-redundant-alt -->
-							<img src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-							
+							<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
 							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
 						</div>
 												  
 						<div class="cooldown relative inline-block flex justify-center">
 							<!-- svelte-ignore a11y-img-redundant-alt -->
-							<img src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-							
+							<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
 							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
 						</div>
 
 					</div>
 		
 					<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
-						<img src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
-						<h1>{player.name}</h1>
+						<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
+						<h1 class="sm:text-clip" >{player.name}</h1>
 					</div>
 		
 					<div class='flex gap-2'>
-						<a href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
-						<a href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
+						<a target="_blank" draggable="false" href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
+						<a target="_blank" draggable="false" href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
 					</div>
-				</div>
+				</li>
 				{/each}
-			</div>
+			</ul>
 
 	</div>
 </main>

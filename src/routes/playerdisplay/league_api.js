@@ -1,7 +1,7 @@
 // @ts-nocheck
 import axios from 'axios';
 import {champion_ids, spell_ids} from './champspells.js';
-const api_key = "?api_key=RGAPI-2c605771-b1f4-4f8b-a0c4-b900f41b92a9";
+const api_key = "?api_key=RGAPI-af07de8f-f17d-42da-b6f4-dc4a06600133";
 
 //Encodes league name to be used in url
 export const encode_name = (name) => {
@@ -16,9 +16,10 @@ export const check_account_validity = async (username) => {
       let user = encode_name(username);
       const account_url = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+ user + api_key;
       const response = await axios.get(account_url);
-      console.log("true");
+      console.log("Exists");
       return true;
     } catch (error) {
+      console.log("Doesn't exist");
       return false;
     }
 };
@@ -47,15 +48,10 @@ export const sort_participants = async (participants) => {
         sorted_participants.push({
             'name': participants[i]['summonerName'],
             'id': participants[i]['summonerId'],
-
             'spell1': "Summoner" + spell_ids[[participants[i]['spell1Id']]][0],
-            
             'cooldown1': spell_ids[[participants[i]['spell1Id']]][1],
-            
             'spell2': "Summoner" + spell_ids[participants[i]['spell2Id']][0],
-            
             'cooldown2': spell_ids[[participants[i]['spell2Id']]][1],
-            
             'champion':champion_ids[[participants[i]['championId']]],
             'teamId': participants[i]['teamId'] == 100 ? 'blue' : 'red',
         });
@@ -70,6 +66,8 @@ export const get_current_game_info = async (summoner_id) => {
     return axios.get(current_game_url)
     .then(response => {
         return sort_participants(response.data.participants);
+    }).catch(error => {
+        console.log(error)
     })
 }
 
@@ -87,11 +85,6 @@ export const get_spell_image = (spell_name) => {
 export const  get_champ_image = (champ_name) => {
     return "http://ddragon.leagueoflegends.com/cdn/13.11.1/img/champion/" + champ_name + ".png";
 }
-
-export const get_spell_cooldown = (spell_name) => {
-
-}
-
 
 /*
 1. Get Name
