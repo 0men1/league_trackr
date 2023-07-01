@@ -11,19 +11,22 @@ export const handleSummmonerNameSubmit = async (e) => {
     }
 
     const summoner_name = data.user_name;
-
-    window.location.href = `playerdisplay/?user=${summoner_name}/`
+    const region = document.querySelector('#dropdown-button').innerText;
+    window.location.href = `playerdisplay/?user=${summoner_name}?region=${region}/`
     // goto(`/playerdisplay/`);
     
 }
 
 
-// export const handleDropdown = () => {
-//     const menu  = document.querySelector('#menu');
-//     menu.classList.toggle('hidden'); 
-// }
+export const handleDropdown = () => {
+    const menu  = document.querySelector('#menu');
+    menu.classList.toggle('hidden'); 
+}
 
-// export const handleChoiceClick = (e) => {
-//   const button = document.querySelector('#dropdown-button');
-//   button.value = e.target.value;
-// }
+export const handleChoiceClick = (e) => {
+  const menu  = document.querySelector('#menu');
+  menu.classList.toggle('hidden'); 
+
+  const button = document.querySelector('#dropdown-button');
+  button.innerText = e.target.innerText;
+}

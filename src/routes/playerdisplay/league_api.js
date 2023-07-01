@@ -1,7 +1,7 @@
 // @ts-nocheck
 import axios from 'axios';
-import {champion_ids, spell_ids} from './champspells.js';
-const api_key = "?api_key=RGAPI-af07de8f-f17d-42da-b6f4-dc4a06600133";
+import {champion_ids, spell_ids, regions} from './champspells.js';
+const api_key = "?api_key=RGAPI-d9c1bbbf-c713-422a-9de8-f92f35ff1898";
 
 //Encodes league name to be used in url
 export const encode_name = (name) => {
@@ -10,11 +10,16 @@ export const encode_name = (name) => {
     }
 }
 
+
+export const get_region_name = (region) => {
+    return regions[region];
+}
+
 //Check Account validitiy
-export const check_account_validity = async (username) => {
+export const check_account_validity = async (username, region) => {
     try {
       let user = encode_name(username);
-      const account_url = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+ user + api_key;
+      const account_url = `https://${get_region_name(region)}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+ user + api_key;
       const response = await axios.get(account_url);
       console.log("Exists");
       return true;
@@ -25,9 +30,9 @@ export const check_account_validity = async (username) => {
 };
   
 //Gets account into from league name
-export const get_game_info = async (username) => {
+export const get_game_info = async (username, region) => {
     let user = encode_name(username);
-    const account_url = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+ user + api_key;
+    const account_url = `https://${get_region_name(region)}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+ user + api_key;
 
     const response = await axios.get(account_url);
     const acc_data = {
@@ -61,8 +66,8 @@ export const sort_participants = async (participants) => {
 
 
 //Get the info from the game that the user is currently in    
-export const get_current_game_info = async (summoner_id) => {
-    const current_game_url = "https://na1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/"+ summoner_id + api_key;
+export const get_current_game_info = async (summoner_id, region) => {
+    const current_game_url = `https://${get_region_name(region)}.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/`+ summoner_id + api_key;
     return axios.get(current_game_url)
     .then(response => {
         return sort_participants(response.data.participants);

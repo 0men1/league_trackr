@@ -11,6 +11,20 @@ export const spell_ids = {
     12: ['Teleport', 360],
 }
 
+export const regions = {
+    'NA': 'na1',
+    'EUW': 'euw1',
+    'EUNE': 'eun1',
+    'KR': 'kr',
+    'OCE': 'oc1',
+    'BR': 'br1',
+    'LAN': 'la1',
+    'LAS': 'la2',
+    'TR': 'tr1',
+    'RU': 'ru',
+    'JP': 'jp1',
+}
+
 export const champion_ids = {
     266 : 'Aatrox',
     103: 'Ahri',
