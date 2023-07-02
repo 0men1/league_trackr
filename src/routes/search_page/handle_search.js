@@ -9,12 +9,21 @@ export const handleSummmonerNameSubmit = async (e) => {
       const [key, value] = field;
       data[key] = value;
     }
-
+    
     const summoner_name = data.user_name;
     const region = document.querySelector('#dropdown-button').innerText;
-    window.location.href = `playerdisplay/?user=${summoner_name}?region=${region}/`
-    // goto(`/playerdisplay/`);
     
+    if (summoner_name == "") {
+      alert("Please enter a summoner name");
+      return;
+    }
+    
+
+    if (region == "Region:") {
+      window.location.href = `playerdisplay/?user=${summoner_name}?region=NA/`
+    } else {
+      window.location.href = `playerdisplay/?user=${summoner_name}?region=${region}/`
+    }
 }
 
 
@@ -29,4 +38,11 @@ export const handleChoiceClick = (e) => {
 
   const button = document.querySelector('#dropdown-button');
   button.innerText = e.target.innerText;
+}
+
+export const on_mouse_leave = () => {
+  const menu  = document.querySelector('#menu');
+  if (!menu.classList.contains('hidden')) {
+    menu.classList.toggle('hidden');
+  }
 }

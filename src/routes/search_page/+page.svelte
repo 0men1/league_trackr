@@ -1,5 +1,5 @@
 <script>
-	import { handleSummmonerNameSubmit, handleDropdown, handleChoiceClick} from "./handle_search";
+	import { handleSummmonerNameSubmit, handleDropdown, handleChoiceClick, on_mouse_leave} from "./handle_search";
     let regions = ['NA', 'EUW', 'EUNE', 'OCE', 'KR', 'JP', 'BR', 'LAN', 'LAS', 'RU', 'TR'];
 </script>
 
@@ -17,11 +17,11 @@
 
     <div class="flex w-fit gap-2 items-center ">
 
-      <div id="dropdown" class="inline h-fit justify-center items-center w-fit">
-            <button on:click={handleDropdown} id="dropdown-button" class="px-3 py-4 rounded-lg bg-slate-500 text-white hover">Region ↓ </button>
-            <div id="menu" class=" p-2 flex flex-col border-2 border-black justify-center absolute bg-white hidden">
+      <div id="dropdown" class="inline-block h-fit justify-center items-center w-fit">
+            <button on:click={handleDropdown} id="dropdown-button" class="px-3 py-4 rounded-lg bg-slate-500 text-white hover relative">Region:</button>
+            <div on:mouseleave={on_mouse_leave} id="menu" class=" p-2 flex flex-col border-2 border-black justify-center bg-white hidden absolute">
             {#each regions as region}
-                <button on:click={handleChoiceClick}  class="hover:bg-slate-200 hover:cursor-pointer w-full">{region}</button>
+                <button on:click={handleChoiceClick}  class="hover:bg-slate-400 hover:cursor-pointer w-full">{region}</button>
             {/each}
             </div>
         </div>

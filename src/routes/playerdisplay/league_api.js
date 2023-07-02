@@ -12,6 +12,9 @@ export const encode_name = (name) => {
 
 
 export const get_region_name = (region) => {
+    if (region == "Region:") {
+        return regions['NA'];
+    }
     return regions[region];
 }
 
@@ -72,7 +75,7 @@ export const get_current_game_info = async (summoner_id, region) => {
     .then(response => {
         return sort_participants(response.data.participants);
     }).catch(error => {
-        console.log(error)
+        alert("User is not in a game right now")
     })
 }
 

@@ -89,11 +89,14 @@
 
 			if (event.target && event.target != drag_target && event.target.nodeName == "LI") {
 				let rect = event.target.getBoundingClientRect()
-				if ((event.clientY - rect.top) / (rect.bottom - rect.top) < .3) {
+				console.log(rect);
+				console.log((event.clientY - rect.top) / (rect.bottom - rect.top));
+				if (((event.clientY - rect.top) / (rect.bottom - rect.top)) < 0.7) {
 					list.insertBefore(drag_target, event.target)
 				}
 				else {
-					list.insertBefore(drag_target, event.target.nextSibling || event.target)
+					// list.insertBefore(drag_target, event.target.nextSibling || event.target)
+					list.insertBefore(drag_target, event.target.nextSibling)
 				}
 			}
 		}
@@ -134,7 +137,6 @@
 
 
 	const handleSummonerSearch = async (id) => {
-		console.log(id);
 		const current_game = await get_current_game_info(id, region).then((data) => data);
 		const blue_team = [];
 		const red_team = [];
@@ -185,7 +187,7 @@
 			
 						<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
 							<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
-							<h1 class="sm:text-clip" >{player.name}</h1>
+							<h1 class="sm:text-clip flex justify-center" >{player.name}</h1>
 						</div>
 			
 						<div class='flex gap-2'>
