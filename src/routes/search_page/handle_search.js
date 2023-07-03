@@ -1,30 +1,53 @@
 // @ts-nocheck
-import { goto } from "$app/navigation";
+
+import {useState} from '../hooks.js'
+
+
+
+export let user = "";
+export let region = "";
 
 export const handleSummmonerNameSubmit = async (e) => {
-    
-    const formData = new FormData(e.target);
-    const data = {};
-    for (let field of formData) {
-      const [key, value] = field;
-      data[key] = value;
-    }
-    
-    const summoner_name = data.user_name;
-    const region = document.querySelector('#dropdown-button').innerText;
-    
-    if (summoner_name == "") {
-      alert("Please enter a summoner name");
-      return;
-    }
-    
+  
+  const formData = new FormData(e.target);
+  const data = {};
 
-    if (region == "Region:") {
-      window.location.href = `playerdisplay/?user=${summoner_name}?region=NA/`
-    } else {
-      window.location.href = `playerdisplay/?user=${summoner_name}?region=${region}/`
-    }
+  for (let field of formData) {
+    const [key, value] = field;
+    data[key] = value;
+  }
+  
+  user = data.user_name;
+  region = document.querySelector('#dropdown-button').innerText;
+  
+  if (user == "") {
+    alert("Please enter a summoner name");
+    return;
+  }
+  const json_data = {
+    'user': user,
+    'region': region
+  }
+
+  
+  saveData(json_data);
+
+
+  if (region == "Region:") {
+    window.location.href = `playerdisplay/?user=${user}?region=NA/`
+  } else {
+    window.location.href = `playerdisplay/?user=${user}?region=${region}/`
+  }
 }
+
+
+
+function saveData(data) {
+  const jsonData = JSON.stringify(data);
+  localStorage.setItem('data.json', jsonData);
+}
+
+
 
 
 export const handleDropdown = () => {

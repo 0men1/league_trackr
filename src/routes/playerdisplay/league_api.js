@@ -1,7 +1,7 @@
 // @ts-nocheck
 import axios from 'axios';
 import {champion_ids, spell_ids, regions} from './champspells.js';
-const api_key = "?api_key=RGAPI-d9c1bbbf-c713-422a-9de8-f92f35ff1898";
+const api_key = "?api_key=RGAPI-bf802948-f1a1-4146-9821-8fb0c6528df8";
 
 //Encodes league name to be used in url
 export const encode_name = (name) => {

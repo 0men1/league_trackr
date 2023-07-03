@@ -10,16 +10,17 @@
 
 	// @ts-nocheck
 	import { check_account_validity, get_game_info, get_current_game_info, get_champ_image, get_spell_image } from "./league_api";
-	import { onMount, afterUpdate } from 'svelte'
-	import {useState} from './hooks.js'
+	import { onMount, afterUpdate, onDestroy } from 'svelte'
+	import {useState} from '../hooks.js'
 
-	let user = '';
+	
 	const [blue_team, setBlueTeam] = useState([]);
 	const [red_team, setRedTeam] = useState([]);
 	let id = '';
+	let user = '';
 	let region = '';
+	let storedData;
 	
-
 
 	function enableCooldown(cooldownElement) {
 		const cooldownDuration = cooldownElement.querySelector('.cooldown-duration');
@@ -29,21 +30,21 @@
 		cooldownElement.style['filter'] = 'brightness(30%)';
 
 		const interval = setInterval(() => {
-		duration--;
-		if (duration > 0) {
-			cooldownDuration.textContent = duration;
-		} else {
-			cooldownElement.classList.remove('disable');
+			duration--;
+			if (duration > 0) {
+				cooldownDuration.textContent = duration;
+			} else {
+				cooldownElement.classList.remove('disable');
 
-			cooldownElement.style['pointer-events'] = 'auto';
-			cooldownElement.style['filter'] = 'brightness(100%)';
+				cooldownElement.style['pointer-events'] = 'auto';
+				cooldownElement.style['filter'] = 'brightness(100%)';
 
-			cooldownDuration.textContent = cooldownDuration.getAttribute('data-duration');
-			clearInterval(interval);
-			cooldownElement.addEventListener('click', () => {
-			enableCooldown(cooldownElement);
-			});
-		}
+				cooldownDuration.textContent = cooldownDuration.getAttribute('data-duration');
+				clearInterval(interval);
+				cooldownElement.addEventListener('click', () => {
+				enableCooldown(cooldownElement);
+				});
+			}
 		}, 1000);
   }
 
@@ -115,10 +116,18 @@
 	}
 
 	onMount(() => { 
-		user = window.location.href.split('?')[1].split('=')[1].split('/')[0]
-		region = window.location.href.split('?')[2].split('=')[1].split('/')[0]
+
+		// user = window.location.href.split('?')[1].split('=')[1].split('/')[0]
+		// region = window.location.href.split('?')[2].split('=')[1].split('/')[0]
+		const jsonData = typeof localStorage !== 'undefined' ? localStorage.getItem('data.json') : null;
+		if (jsonData) {
+			storedData = JSON.parse(jsonData);
+		}
+
+		user = storedData.user;
+		region = storedData.region;
 	});
-	
+
 	const handleSummonerNameSubmit = async (user, region) => {
 		if (await check_account_validity(user, region)) {
 			id = await get_game_info(user, region).then((data) => data.id);

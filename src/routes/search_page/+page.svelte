@@ -1,5 +1,7 @@
-<script>
-	import { handleSummmonerNameSubmit, handleDropdown, handleChoiceClick, on_mouse_leave} from "./handle_search";
+<script src="./handle_search.js">
+// @ts-nocheck
+
+    import { handleSummmonerNameSubmit, handleDropdown, handleChoiceClick, on_mouse_leave} from "./handle_search";
     let regions = ['NA', 'EUW', 'EUNE', 'OCE', 'KR', 'JP', 'BR', 'LAN', 'LAS', 'RU', 'TR'];
 </script>
 
