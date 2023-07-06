@@ -76,6 +76,9 @@ export const get_current_game_info = async (summoner_id, region) => {
         return sort_participants(response.data.participants);
     }).catch(error => {
         ingame = false
+        window.location.href = `search_page/`
+        alert('Invalid User');
+
     })
 }
 

@@ -146,7 +146,6 @@
 	const handleSummonerSearch = async (id) => {
 
 		const current_game = await get_current_game_info(id, region).then((data) => data)		
-		console.log(ingame)
 		const blue_team = [];
 		const red_team = [];
 
