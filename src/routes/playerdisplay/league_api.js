@@ -77,7 +77,7 @@ export const get_current_game_info = async (summoner_id, region) => {
     }).catch(error => {
         ingame = false
         window.location.href = `search_page/`
-        alert('Invalid User');
+        alert('User is not in a game right now');
 
     })
 }
