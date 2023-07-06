@@ -1,7 +1,8 @@
 // @ts-nocheck
 import axios from 'axios';
 import {champion_ids, spell_ids, regions} from './champspells.js';
-const api_key = "?api_key=RGAPI-b6f539b8-bc4d-4767-9899-67e175b4d1c4";
+const api_key = "?api_key=RGAPI-cda490cd-dd2e-464f-8ebd-c6242933c357";
+export let ingame;
 
 //Encodes league name to be used in url
 export const encode_name = (name) => {
@@ -24,10 +25,8 @@ export const check_account_validity = async (username, region) => {
       let user = encode_name(username);
       const account_url = `https://${get_region_name(region)}.api.riotgames.com/lol/summoner/v4/summoners/by-name/`+ user + api_key;
       const response = await axios.get(account_url);
-      console.log("Exists");
       return true;
     } catch (error) {
-      console.log("Doesn't exist");
       return false;
     }
 };
@@ -73,9 +72,10 @@ export const get_current_game_info = async (summoner_id, region) => {
     const current_game_url = `https://${get_region_name(region)}.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/`+ summoner_id + api_key;
     return axios.get(current_game_url)
     .then(response => {
+        ingame = true
         return sort_participants(response.data.participants);
     }).catch(error => {
-        alert("User is not in a game right now")
+        ingame = false
     })
 }
 
@@ -93,6 +93,15 @@ export const get_spell_image = (spell_name) => {
 export const  get_champ_image = (champ_name) => {
     return "http://ddragon.leagueoflegends.com/cdn/13.11.1/img/champion/" + champ_name + ".png";
 }
+
+export const get_acc_opgg = (username, region) => {
+    return `https://www.op.gg/summoners/${region}/${username}`
+}
+
+export const get_acc_ugg = (username, region) => {
+    return `https://u.gg/lol/profile/${get_region_name(region)}/${username}/overview`
+}
+
 
 /*
 1. Get Name

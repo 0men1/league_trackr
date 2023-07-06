@@ -9,17 +9,17 @@
 <script>
 
 	// @ts-nocheck
-	import { check_account_validity, get_game_info, get_current_game_info, get_champ_image, get_spell_image } from "./league_api";
-	import { onMount, afterUpdate, onDestroy } from 'svelte'
+	import { check_account_validity, get_game_info, get_current_game_info, get_champ_image, get_spell_image, get_acc_opgg, get_acc_ugg, ingame} from "./league_api";
+	import { onMount, afterUpdate} from 'svelte'
 	import {useState} from '../hooks.js'
 
 	
 	const [blue_team, setBlueTeam] = useState([]);
 	const [red_team, setRedTeam] = useState([]);
-	let id = '';
-	let user = '';
-	let region = '';
-	let storedData;
+	let id = ''; //user's id
+	let user = ''; // user's summoner name
+	let region = ''; // user's region
+	let storedData; // stored data from local storage
 	
 
 	function enableCooldown(cooldownElement) {
@@ -90,8 +90,6 @@
 
 			if (event.target && event.target != drag_target && event.target.nodeName == "LI") {
 				let rect = event.target.getBoundingClientRect()
-				console.log(rect);
-				console.log((event.clientY - rect.top) / (rect.bottom - rect.top));
 				if (((event.clientY - rect.top) / (rect.bottom - rect.top)) < 0.7) {
 					list.insertBefore(drag_target, event.target)
 				}
@@ -146,7 +144,9 @@
 
 
 	const handleSummonerSearch = async (id) => {
-		const current_game = await get_current_game_info(id, region).then((data) => data);
+
+		const current_game = await get_current_game_info(id, region).then((data) => data)		
+		console.log(ingame)
 		const blue_team = [];
 		const red_team = [];
 
@@ -166,81 +166,100 @@
   
 
   <main class="flex flex-col h-screen justify-center justify-between py-12">
-	
-	  
 	  <div class='flex flex-col items-center h-fit gap-16'>
 		
 		<a id="all_users" class="flex text-white border-2 border-black rounded-lg p-4" href="./search_page">Back to search</a>
 
-		<div id='all_users' class='lg:scale-100 md:scale-75 sm:scale-50 flex w-fit h-fit place-content-center gap-4 rounded-lg'>
-			
-				<ul class='item inline w-fit h-full text-white list'>
-					{#each $blue_team as player, i}
-					<li class=' list-none item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
-						
-						<div class='flex justify-center w-fit h-fit gap-2'>
-							
-							<div class="cooldown relative inline-block flex justify-center">
-								<!-- svelte-ignore a11y-img-redundant-alt -->
-								<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-								<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
-							</div>
-													  
-							<div class="cooldown relative inline-block flex justify-center">
-								<!-- svelte-ignore a11y-img-redundant-alt -->
-								<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-								<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
-							</div>
-	
-						</div>
-			
-						<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
-							<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
-							<h1 class="sm:text-clip flex justify-center" >{player.name}</h1>
-						</div>
-			
-						<div class='flex gap-2'>
-							<a target="_blank" draggable="false" href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
-							<a target="_blank" draggable="false" href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
-						</div>
-					</li>
-					{/each}
-				</ul>
-			
-	
-				<ul class='item inline w-fit h-full text-white list'>
-					{#each $red_team as player, i}
-					<li class='item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
-						
-						<div class='flex justify-center w-fit h-fit gap-2'>
-							
-							<div class="cooldown relative inline-block flex justify-center">
-								<!-- svelte-ignore a11y-img-redundant-alt -->
-								<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-								<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
-							</div>
-													  
-							<div class="cooldown relative inline-block flex justify-center">
-								<!-- svelte-ignore a11y-img-redundant-alt -->
-								<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
-								<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
-							</div>
-	
-						</div>
-			
-						<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
-							<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
-							<h1 class="sm:text-clip" >{player.name}</h1>
-						</div>
-			
-						<div class='flex gap-2'>
-							<a target="_blank" draggable="false" href={`https://www.op.gg/summoners/na/${player.name}`} id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
-							<a target="_blank" draggable="false" href={`https://u.gg/lol/profile/na1/${player.name}/overview`} id='ugg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
-						</div>
-					</li>
-					{/each}
-				</ul>
+		<div id='all_users' class='lg:scale-100 md:scale-75 sm:scale-50 flex w-fit h-fit place-content-center gap-4 rounded-lg'>	
 
+			<ul class='item inline w-fit h-full text-white list'>
+				{#each $blue_team as player, i}
+				<li class=' list-none item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
+					
+					<div class='flex justify-center w-fit h-fit gap-2'>
+						
+						<div class="cooldown relative inline-block flex justify-center">
+							<!-- svelte-ignore a11y-img-redundant-alt -->
+							<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
+							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
+						</div>
+													
+						<div class="cooldown relative inline-block flex justify-center">
+							<!-- svelte-ignore a11y-img-redundant-alt -->
+							<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
+							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
+						</div>
+
+					</div>
+		
+					<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
+						<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
+						<h1 class="sm:text-clip flex justify-center" >{player.name}</h1>
+					</div>
+		
+					<div class='flex gap-2'>
+						<a target="_blank" 
+						draggable="false" 
+						href={get_acc_opgg(player.name,storedData.region)} 
+						id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
+
+
+						<a target="_blank" 
+						draggable="false" 
+						href={get_acc_ugg(player.name,storedData.region)} 
+						id='ugg' 
+						class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
+
+					</div>
+				</li>
+				{/each}
+			</ul>
+		
+
+			<ul class='item inline w-fit h-full text-white list'>
+				{#each $red_team as player, i}
+				<li class='item px-4 h-fit border-2 border-black flex items-center justify-between gap-6'>
+					
+					<div class='flex justify-center w-fit h-fit gap-2'>
+						
+						<div class="cooldown relative inline-block flex justify-center">
+							<!-- svelte-ignore a11y-img-redundant-alt -->
+							<img draggable="false" src={`${get_spell_image(player.spell1)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
+							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown1}</h1>
+						</div>
+													
+						<div class="cooldown relative inline-block flex justify-center">
+							<!-- svelte-ignore a11y-img-redundant-alt -->
+							<img draggable="false" src={`${get_spell_image(player.spell2)}`} alt="Cooldown Image" class="rounded-md cursor-pointer" width={50} height={50}/>
+							<h1 class="cooldown-duration absolute w-full  flex place-content-center bottom-0 text-center text-white text-sm bg-black bg-opacity-70 overflow-ellipsis">{player.cooldown2}</h1>
+						</div>
+
+					</div>
+		
+					<div class='flex flex-col p-5 w-fit h-fit items-center place-content-center'>
+						<img draggable="false" src={`${get_champ_image(player.champion)}`} alt="" width={70} height={70}/>
+						<h1 class="sm:text-clip" >{player.name}</h1>
+					</div>
+		
+					<div class='flex gap-2'>
+
+						<a target="_blank" 
+						href={get_acc_opgg(player.name,storedData.region)} 
+						draggable="false" 
+						id='opgg' class='p-2 border-black border-2 rounded-lg hover:cursor-pointer flex justify-center'>OP.GG</a>
+
+
+						<a target="_blank" 
+						draggable="false" 
+						href={get_acc_ugg(player.name,storedData.region)} 
+						id='ugg' 
+						class='p-2 border-black border-2 rounded-lg hover:cursor-pointer justify-center flex'>U.GG</a>
+					
+					</div>
+				</li>
+				{/each}
+			</ul>
+		</div>
 	</div>
 </main>
   
