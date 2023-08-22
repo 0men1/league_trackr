@@ -1,58 +1,54 @@
-# how to use
-You can use this site by clicking the link on the top right corner. Enter a summoner name and choose the region that user is in.
+# League Trackr
 
-If the user is in a game:
-  You will see 10 players show up on the screen with their summoner spells, opgg, ugg, and champion icons
+## How to Use
+
+To use this site, follow these steps:
+
+1. Click the link located in the top right corner.
+2. Enter the summoner's name.
+3. Choose the region the user is in.
+
+**User Status:**
+
+- If the user is in a game:
+  - You will see ten players displayed on the screen, each accompanied by their summoner spells, OP.GG and U.GG links, as well as champion icons.
   
-If the user isnt in a game:
-  You will see an alert that says so
+- If the user isn't in a game:
+  - An alert will inform you of their non-participation.
   
-If the user does not exist:
-  You will see an alert that says the user does not exist in that region/anywhere.
+- If the user does not exist:
+  - An alert will indicate that the user does not exist in the specified region or anywhere.
 
-# functions
-1. You are able to set the player's summoner spells on cooldown once you click it. BEWARE: once you click it you cannot undo.
-2. You are able to drag and drop the players and arrange them as you would like as RIOT does not provide me with the exact roles the player chose
-3. You are able to check every player's opgg and ugg.
+## Functions
 
-# how this was made
-This was made entirely with svelte kit, html, tailwind css, js.
+This application offers several functions:
 
-# create-svelte
+1. **Set Summoner Spell Cooldowns:** You can set a player's summoner spells on cooldown by clicking them. Caution: This action is irreversible once triggered.
+2. **Arrange Players:** You can drag and drop players to arrange them according to your preference, as the exact roles the players chose are not provided by RIOT.
+3. **Player Profiles:** You can easily check the OP.GG and U.GG profiles for each player.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## How This Project Was Developed
 
-## Creating a project
+This project was developed using the following technologies:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Svelte Kit
+- HTML
+- Tailwind CSS
+- JavaScript
+
+## Create-Svelte
+
+This project was built using [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte), which provides everything you need to start a Svelte project.
+
+### Creating a Project
+
+If you're reading this, you've probably completed this step. Congratulations!
+
+To create a new project:
 
 ```bash
-# create a new project in the current directory
+# Create a new project in the current directory
 npm create svelte@latest
 
-# create a new project in my-app
+# Create a new project named my-app
 npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
